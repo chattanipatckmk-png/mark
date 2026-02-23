@@ -2,13 +2,13 @@
 const foodData = [
    /* ===== PART 1 ===== */
 
-{ name:"ข้าวซอยไก่", calories:500, protein:30, spicy:true, ageGroup:["วัยรุ่น","ผู้ใหญ่"], chewEasy:false, foodGroup:["คาร์โบไฮเดรต","โปรตีน"], image:"photo/ข้าวซอยไก่.JPG" },
+{ name:"ข้าวซอยไก่", calories:500, protein:30, spicy:true, ageGroup:["วัยรุ่น","ผู้ใหญ่"], chewEasy:false, foodGroup:["คาร์โบไฮเดรต","โปรตีน"], image:"ข้าวซอยไก่.JPG" },
 
 { name:"ขนมจีนน้ำเงี้ยว", calories:350, protein:20, spicy:true, ageGroup:["วัยรุ่น","ผู้ใหญ่"], chewEasy:false, foodGroup:["คาร์โบไฮเดรต","โปรตีน"], image:"photo/ขนมจีนน้ำเงี้ยว.JPG" },
 
-{ name:"แกงฮังเลหมู + ข้าวเหนียว", calories:600, protein:35, spicy:false, ageGroup:["วัยรุ่น","ผู้ใหญ่"], chewEasy:false, foodGroup:["คาร์โบไฮเดรต","โปรตีน"], image:"photo/เเกงฮังเลหมู.JPG" },
+{ name:"แกงฮังเลหมู + ข้าวเหนียว", calories:600, protein:35, spicy:false, ageGroup:["วัยรุ่น","ผู้ใหญ่"], chewEasy:false, foodGroup:["คาร์โบไฮเดรต","โปรตีน"], image:"ข้าวเหนียวหมูฮังเล.JPG" },
 
-{ name:"ไส้อั่ว + ข้าวเหนียว", calories:550, protein:30, spicy:true, ageGroup:["วัยรุ่น","ผู้ใหญ่"], chewEasy:false, foodGroup:["โปรตีน","คาร์โบไฮเดรต"], image:"photo/ไส้อั่ว.JPG" },
+{ name:"ไส้อั่ว + ข้าวเหนียว", calories:550, protein:30, spicy:true, ageGroup:["วัยรุ่น","ผู้ใหญ่"], chewEasy:false, foodGroup:["โปรตีน","คาร์โบไฮเดรต"], image:"ไส้อั่วข้าวเหนียว.JPG" },
 
 { name:"ลาบหมูคั่ว", calories:250, protein:20, spicy:true, ageGroup:["วัยรุ่น","ผู้ใหญ่"], chewEasy:false, foodGroup:["โปรตีน"], image:"photo/ลาบหมูคั่ว.jpg" },
 

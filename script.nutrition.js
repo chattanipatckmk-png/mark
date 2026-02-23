@@ -1,6 +1,6 @@
 // ข้อมูลอาหาร (ผมใส่ให้เยอะๆ ครบทุกประเภทเลยครับ)
 const foodData = [
- { name:"ข้าวซอยไก่", cal:500, type:"noodle", meal:["lunch"], img:"photo/ข้าวซอยไก่.JPG" },
+ { name:"ข้าวซอยไก่", cal:500, type:"noodle", meal:["lunch"], img:"ข้าวซอยไก่.JPG" },
 { name:"ขนมจีนน้ำเงี้ยว", cal:350, type:"noodle", meal:["breakfast","lunch"], img:"photo/ขนมจีนน้ำเงี้ยว.JPG" },
 { name:"แกงฮังเลหมู + ข้าวเหนียว", cal:600, type:"rice", meal:["lunch"], img:"photo/เเกงฮังเลหมู.JPG" },
 { name:"ไส้อั่ว + ข้าวเหนียว", cal:550, type:"rice", meal:["lunch"], img:"photo/ไส้อั่ว.JPG" },
