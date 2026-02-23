@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>สุ่มอาหารตามอายุ</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    background:linear-gradient(135deg,#8b0000,#b30000,#4d0000);
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* การ์ด */
+.age-card{
+    background:#111;
+    padding:45px;
+    border-radius:25px;
+    width:420px;
+    text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,0.6);
+}
+
+/* หัวข้อ */
+.age-card h1{
+    color:white;
+    margin-bottom:25px;
+    font-size:26px;
+}
+
+/* ช่องกรอก */
+.age-card input{
+    width:100%;
+    padding:15px;
+    border-radius:15px;
+    border:2px solid transparent;
+    margin-bottom:25px;
+    font-size:16px;
+    outline:none;
+    transition:0.3s;
+}
+
+/* ตอนโฟกัส */
+.age-card input:focus{
+    border:2px solid #ff2e2e;
+    box-shadow:0 0 10px rgba(255,46,46,0.6);
+}
+
+/* กล่องปุ่ม */
+.button-group{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+/* ปุ่มทั้งหมด */
+.button-group button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:15px;
+    font-size:17px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+/* ปุ่มยืนยัน */
+.confirm-btn{
+    background:#ff2e2e;
+    color:white;
+}
+
+.confirm-btn:hover{
+    background:#ff4444;
+    transform:scale(1.05);
+}
+
+/* ปุ่มกลับ */
+.back-btn{
+    background:#444;
+    color:white;
+}
+
+.back-btn:hover{
+    background:#666;
+    transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="age-card">
+    <h1>กรอกอายุของคุณ</h1>
+
+    <input type="number" id="ageInput" placeholder="ใส่อายุ">
+
+    <div class="button-group">
+        <button class="confirm-btn" onclick="goToResult()">ยืนยัน</button>
+        <button class="back-btn" onclick="goMain()">⬅ กลับหน้าแรก</button>
+    </div>
+</div>
+
+<script>
+
+function goToResult(){
+    const age = parseInt(document.getElementById("ageInput").value);
+
+    if(!age || age <= 0){
+        alert("กรุณากรอกอายุให้ถูกต้อง");
+        return;
+    }
+
+    localStorage.setItem("userAge", age);
+    window.location.href = "result-age.html";
+}
+
+function goMain(){
+    window.location.href = "main.html";
+}
+
+</script>
+
+</body>
+</html>

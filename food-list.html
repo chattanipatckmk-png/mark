@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>รายการอาหารทั้งหมด</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Kanit, sans-serif;
+    background:linear-gradient(135deg,#000,#5c0000,#a00000);
+    color:white;
+}
+
+/* ปุ่มกลับ */
+.back-btn{
+    position:fixed;
+    top:25px;
+    right:25px;
+    background:linear-gradient(45deg,#ff2e2e,#ff6a00);
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:30px;
+    cursor:pointer;
+    font-size:14px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.4);
+    transition:0.3s;
+    z-index:999;
+}
+.back-btn:hover{
+    transform:scale(1.1);
+}
+
+.container{
+    padding:60px 40px 40px 40px;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:#111;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.6);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:scale(1.05);
+}
+
+.card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+}
+
+.card-content{
+    padding:15px;
+}
+
+.card h3{
+    margin:10px 0;
+}
+
+.cal{
+    color:#ff4444;
+    font-weight:bold;
+}
+
+.type{
+    font-size:14px;
+    opacity:0.8;
+}
+
+select,button{
+    width:100%;
+    padding:8px;
+    margin-top:10px;
+    border-radius:10px;
+    border:none;
+}
+
+button{
+    background:#ff2e2e;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+button:hover{
+    background:#ff4444;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ปุ่มย้อนกลับ -->
+<button class="back-btn" onclick="window.location.href='main.html'">
+    🔙 กลับหน้าแรก
+</button>
+
+<div class="container">
+    <h1>🍽 เลือกรายการอาหารทั้งหมด</h1>
+    <div class="grid" id="foodGrid"></div>
+</div>
+
+<!-- ดึงไฟล์ฐานข้อมูล -->
+<script src="script(เลือกรายการอาหาร).js"></script>
+
+<script>
+const grid = document.getElementById("foodGrid");
+
+foodData.forEach((food,index)=>{
+
+    grid.innerHTML += `
+        <div class="card">
+            <img src="${food.img}">
+            <div class="card-content">
+                <h3>${food.name}</h3>
+                <div class="cal">🔥 ${food.cal} kcal</div>
+                <div class="type">ประเภท: ${food.type}</div>
+
+                <select id="meal${index}">
+                    <option value="มื้อเช้า">มื้อเช้า</option>
+                    <option value="มื้อกลางวัน">มื้อกลางวัน</option>
+                    <option value="มื้อเย็น">มื้อเย็น</option>
+                </select>
+
+                <button onclick="addMeal(${index})">
+                    บันทึกมื้ออาหาร
+                </button>
+            </div>
+        </div>
+    `;
+});
+
+function addMeal(index){
+
+    const meal = document.getElementById("meal"+index).value;
+    const food = foodData[index];
+
+    const now = new Date();
+
+    const log = {
+        name: food.name,
+        cal: food.cal,
+        meal: meal,
+        date: now.toLocaleDateString(),
+        time: now.toLocaleTimeString()
+    };
+
+    let logs = JSON.parse(localStorage.getItem("foodLogs")) || [];
+    logs.push(log);
+    localStorage.setItem("foodLogs", JSON.stringify(logs));
+
+    alert("บันทึกเรียบร้อยแล้ว ✅");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>กิจกรรมเผาผลาญแคลอรี่</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255,0,0,0.4), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(255,0,0,0.3), transparent 40%),
+        linear-gradient(135deg,#000000,#3a0000,#8b0000);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+/* การ์ดหลัก */
+.container{
+    background:rgba(0,0,0,0.85);
+    padding:45px;
+    border-radius:25px;
+    width:500px;
+    text-align:center;
+    box-shadow:0 0 40px rgba(255,0,0,0.3);
+}
+
+/* หัวข้อ */
+h2{
+    margin-bottom:25px;
+    font-size:24px;
+}
+
+/* dropdown */
+select{
+    width:100%;
+    padding:14px;
+    margin:10px 0;
+    border-radius:15px;
+    border:none;
+    font-size:16px;
+    outline:none;
+    transition:0.3s;
+}
+
+select:focus{
+    box-shadow:0 0 10px rgba(255,0,0,0.6);
+}
+
+/* ปุ่ม */
+button{
+    padding:12px 20px;
+    margin:10px 6px;
+    border-radius:15px;
+    border:none;
+    font-size:15px;
+    background:#ff2e2e;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+    background:#ff4444;
+}
+
+/* รายการกิจกรรม */
+.activity-list{
+    margin-top:30px;
+}
+
+/* การ์ดกิจกรรม */
+.card{
+    background:#1a1a1a;
+    padding:18px;
+    border-radius:15px;
+    margin:15px auto;
+    box-shadow:0 0 15px rgba(255,0,0,0.2);
+    text-align:left;
+}
+
+/* รวม kcal */
+.total{
+    margin-top:25px;
+    font-size:22px;
+    color:#ff4d4d;
+    font-weight:bold;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🔥 กิจกรรมเผาผลาญแคลอรี่</h2>
+
+<select id="activitySelect"></select>
+
+<select id="hourSelect">
+    <option value="0.5">30 นาที</option>
+    <option value="1">1 ชั่วโมง</option>
+    <option value="2">2 ชั่วโมง</option>
+    <option value="3">3 ชั่วโมง</option>
+    <option value="4">4 ชั่วโมง</option>
+    <option value="5">5 ชั่วโมง</option>
+</select>
+
+<div>
+    <button onclick="addActivity()">บันทึกกิจกรรม</button>
+    <button onclick="clearData()">ล้างข้อมูลวันนี้</button>
+    <button onclick="goBack()">กลับหน้าอาหาร</button>
+</div>
+
+<div class="activity-list" id="activityResult"></div>
+
+</div>
+
+<script src="script(การเผาผลาญ).js"></script>
+
+<script>
+
+let activityLog = JSON.parse(localStorage.getItem("activityLog")) || [];
+let totalBurn = parseFloat(localStorage.getItem("totalBurn")) || 0;
+
+function loadActivities(){
+    const select = document.getElementById("activitySelect");
+
+    if(typeof activityDatabase !== "undefined"){
+        activityDatabase.forEach(activity=>{
+            const option = document.createElement("option");
+            option.value = activity.kcal;
+            option.textContent = `${activity.name} (${activity.kcal} kcal/ชม.)`;
+            select.appendChild(option);
+        });
+    }
+
+    renderActivity();
+}
+
+function addActivity(){
+
+    const activitySelect = document.getElementById("activitySelect");
+    const hourSelect = document.getElementById("hourSelect");
+
+    const kcalPerHour = parseFloat(activitySelect.value);
+    const hours = parseFloat(hourSelect.value);
+    const activityName = activitySelect.options[activitySelect.selectedIndex].text;
+
+    const burned = kcalPerHour * hours;
+
+    totalBurn += burned;
+
+    activityLog.push({
+        name: activityName,
+        hour: hours,
+        burn: burned,
+        date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("activityLog", JSON.stringify(activityLog));
+    localStorage.setItem("totalBurn", totalBurn);
+
+    renderActivity();
+}
+
+function renderActivity(){
+
+    let html = "<h3>กิจกรรมวันนี้</h3>";
+
+    activityLog.forEach(a=>{
+        html += `
+        <div class="card">
+            <p><strong>${a.name}</strong></p>
+            <p>⏱ ${a.hour} ชม.</p>
+            <p>🔥 ${a.burn.toFixed(0)} kcal</p>
+            <small>${a.date}</small>
+        </div>
+        `;
+    });
+
+    html += `<div class="total">🔥 เผาผลาญรวม ${totalBurn.toFixed(0)} kcal</div>`;
+
+    document.getElementById("activityResult").innerHTML = html;
+}
+
+function clearData(){
+    localStorage.removeItem("activityLog");
+    localStorage.removeItem("totalBurn");
+    activityLog = [];
+    totalBurn = 0;
+    renderActivity();
+}
+
+function goBack(){
+    window.location.href = "main.html";
+}
+
+loadActivities();
+
+</script>
+
+</body>
+</html>

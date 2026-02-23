@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard สถิติ</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#8b0000,#b30000,#660000);
+    color:white;
+}
+
+/* เต็มหน้าจอ */
+.container{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:40px;
+}
+
+h2{
+    font-size:40px;
+    margin-bottom:40px;
+}
+
+/* การ์ดใหญ่เต็มจอ */
+.card{
+    width:90%;
+    max-width:1100px;
+    background:rgba(0,0,0,0.85);
+    padding:40px;
+    border-radius:25px;
+    box-shadow:0 0 40px rgba(0,0,0,0.6);
+}
+
+/* สถิติเรียง 3 ช่อง */
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
+    margin-bottom:40px;
+}
+
+.stat-box{
+    background:#111;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    font-size:22px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.6);
+    transition:0.3s;
+}
+
+.stat-box:hover{
+    transform:translateY(-5px);
+}
+
+/* กราฟ */
+canvas{
+    width:100%;
+    height:300px;
+    background:white;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+/* ปุ่ม */
+.buttons{
+    text-align:center;
+    margin-top:30px;
+}
+
+button{
+    padding:15px 35px;
+    border:none;
+    border-radius:30px;
+    background:#ff2e2e;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    margin:10px;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#ff5555;
+    transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>📊 Dashboard สถิติการสุ่ม</h2>
+
+<div class="card">
+
+    <div class="stats-grid">
+        <div class="stat-box" id="totalRandom"></div>
+        <div class="stat-box" id="totalCalories"></div>
+        <div class="stat-box" id="avgCalories"></div>
+    </div>
+
+    <canvas id="chart"></canvas>
+
+    <div class="buttons">
+        <button onclick="clearStats()">ล้างสถิติ</button>
+        <button onclick="window.location.href='main.html'">กลับหน้าแรก</button>
+    </div>
+
+</div>
+
+</div>
+
+<script>
+
+function loadStats(){
+    let stats = JSON.parse(localStorage.getItem("stats")) || {
+        totalRandom:0,
+        totalCalories:0
+    };
+
+    let avg = stats.totalRandom > 0 
+        ? Math.round(stats.totalCalories / stats.totalRandom)
+        : 0;
+
+    document.getElementById("totalRandom").innerHTML =
+        "🔢 <br>จำนวนครั้งที่สุ่ม<br><b>" + stats.totalRandom + "</b>";
+
+    document.getElementById("totalCalories").innerHTML =
+        "🔥 <br>แคลอรี่รวมทั้งหมด<br><b>" + stats.totalCalories + " kcal</b>";
+
+    document.getElementById("avgCalories").innerHTML =
+        "📉 <br>ค่าเฉลี่ยต่อครั้ง<br><b>" + avg + " kcal</b>";
+
+    drawChart(stats.totalRandom, stats.totalCalories);
+}
+
+function drawChart(totalRandom, totalCalories){
+    let canvas = document.getElementById("chart");
+    let ctx = canvas.getContext("2d");
+
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 300;
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    let center1 = canvas.width * 0.35;
+    let center2 = canvas.width * 0.65;
+
+    let barWidth = 120;
+    let maxHeight = 180;
+
+    let randomHeight = totalRandom * 10;
+    let calHeight = totalCalories / 5;
+
+    // แท่ง ครั้งสุ่ม
+    ctx.fillStyle = "red";
+    ctx.fillRect(center1 - barWidth/2, 220 - randomHeight, barWidth, randomHeight);
+
+    // แท่ง แคลรวม
+    ctx.fillStyle = "orange";
+    ctx.fillRect(center2 - barWidth/2, 220 - calHeight, barWidth, calHeight);
+
+    // จัดข้อความให้อยู่กลางแท่ง
+    ctx.fillStyle = "black";
+    ctx.font = "18px Arial";
+    ctx.textAlign = "center";
+
+    ctx.fillText("ครั้งสุ่ม", center1, 260);
+    ctx.fillText("แคลรวม", center2, 260);
+}
+
+function clearStats(){
+    localStorage.removeItem("stats");
+    alert("ล้างสถิติเรียบร้อยแล้ว");
+    loadStats();
+}
+
+window.onload = loadStats;
+
+</script>
+
+</body>
+</html>

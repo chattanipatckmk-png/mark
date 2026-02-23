@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Random Food</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#5c0000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+/* กล่องกลาง */
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+}
+
+.card{
+    background:#111;
+    padding:40px;
+    border-radius:20px;
+    width:350px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,0.5);
+}
+
+h1{ color:white; }
+
+input{
+    width:100%;
+    height:50px;
+    padding:0 15px;
+    border-radius:12px;
+    border:2px solid #ff2e2e;
+    font-size:16px;
+    background:#f2f2f2;
+    box-shadow:0 5px 15px rgba(0,0,0,0.4);
+    transition:0.3s;
+    box-sizing:border-box;
+}
+
+input:focus{
+    outline:none;
+    border:2px solid #ff2e2e;
+    background:white;
+    box-shadow:0 8px 20px rgba(255,46,46,0.4);
+}
+
+.main-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#ff2e2e;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin-bottom:10px;
+    transition:0.3s;
+}
+
+.main-btn:hover{
+    transform:scale(1.05);
+}
+
+.dashboard-btn{
+    width:100%;
+    padding:15px;
+    margin:10px 0;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(45deg,#ff2e2e,#ff6a00);
+    color:white;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 5px 20px rgba(0,0,0,0.4);
+}
+
+.dashboard-btn:hover{
+    transform:scale(1.05);
+}
+
+.logout{ background:#444; }
+
+/* 🔥 Floating Menu */
+.floating-container{
+    position: fixed;
+    right: 30px;
+    bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 999;
+}
+
+.floating-btn{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    transition: 0.3s;
+    position: relative;
+}
+
+.floating-btn:hover{
+    transform: scale(1.15);
+}
+
+/* สีปุ่ม */
+.activity{ background:#ff5500; color:white; }
+.meal{ background:#ff8800; color:white; }
+.profile{ background:#ffc107; color:black; }
+.history{ background:#ff2e2e; color:white; }
+.daily{ background:#00bcd4; color:white; }
+.foodlist{ background:#00bcd4; color:white; } /* ปุ่มใหม่ */
+
+/* Tooltip */
+.floating-btn::after{
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    background:#111;
+    color:white;
+    padding:8px 14px;
+    border-radius:8px;
+    font-size:14px;
+    white-space: nowrap;
+    opacity:0;
+    transition:0.3s;
+}
+
+.floating-btn:hover::after{
+    opacity:1;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h1>หน้าสุ่มอาหาร</h1>
+
+        <input type="number" id="calInput" placeholder="ใส่แคลอรี่สูงสุด">
+        <p id="errorMsg" style="color:red; font-size:14px; margin:5px 0;"></p>
+
+        <button class="main-btn" onclick="startRandom()">สุ่มอาหาร</button>
+
+        <button class="dashboard-btn"
+            onclick="window.location.href='dashboard.html'">
+            📊 ดูสถิติการสุ่ม
+        </button>
+
+        <h2 id="foodName" style="color:white;"></h2>
+        <p id="foodCal" style="color:white;"></p>
+        <p id="foodType" style="color:white;"></p>
+        <img id="foodImg" style="width:100%;border-radius:10px;">
+
+        <button class="main-btn logout"
+            onclick="logout()">ออกจากระบบ</button>
+
+    </div>
+</div>
+
+<!-- 🔥 Floating Menu -->
+<div class="floating-container">
+
+    <button class="floating-btn activity"
+        onclick="window.location.href='activity.html'"
+        data-tooltip="🔥 กิจกรรมเผาผลาญแคลอรี่">🔥</button>
+
+    <button class="floating-btn meal"
+        onclick="window.location.href='meal-plan.html'"
+        data-tooltip="🍽 ระบบสุ่มอาหาร 3 มื้อ">🍽️</button>
+
+    <button class="floating-btn profile"
+        onclick="window.location.href='age.html'"
+        data-tooltip="👤 กินตามวัย">👤</button>
+
+    <button class="floating-btn history"
+        onclick="window.location.href='history.html'"
+        data-tooltip="📜 ประวัติการสุ่ม">📜</button>
+
+    <button class="floating-btn daily"
+        onclick="window.location.href='daily-log.html'"
+        data-tooltip="📅 บันทึกอาหารรายวัน">📅</button>
+
+    <!-- ✅ ปุ่มใหม่ รายการอาหารทั้งหมด -->
+    <button class="floating-btn foodlist"
+        onclick="window.location.href='food-list.html'"
+        data-tooltip="🍔 รายการอาหารทั้งหมด">🍔</button>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ผลลัพธ์ตามอายุ</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#8b0000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    background:black;
+    border-radius:20px;
+    padding:40px;
+    text-align:center;
+    color:white;
+}
+
+h2{
+    margin-bottom:5px;
+}
+
+.food-list{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    margin-top:40px;
+    flex-wrap:wrap;
+}
+
+.food{
+    width:160px;
+}
+
+.food img{
+    width:160px;
+    height:160px;
+    object-fit:cover;
+    border-radius:15px;
+}
+
+.total{
+    margin-top:40px;
+    font-size:22px;
+    color:#ff0000;
+    font-weight:bold;
+}
+
+.btn-group{
+    margin-top:25px;
+    display:flex;
+    justify-content:center;
+    gap:15px;
+}
+
+button{
+    padding:10px 25px;
+    background:red;
+    color:white;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+.btn-group button:first-child{
+    background:#ff0000;
+}
+
+select{
+    position:absolute;
+    bottom:30px;
+    left:30px;
+    padding:5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>เมนูที่เหมาะกับคุณ</h2>
+    <p id="rangeText"></p>
+
+    <div class="food-list" id="resultBox"></div>
+
+    <div class="total" id="totalText"></div>
+
+    <div class="btn-group">
+        <button onclick="generateMenu()">สุ่มใหม่อีกครั้ง</button>
+        <button onclick="window.history.back()">กลับ</button>
+    </div>
+
+</div>
+
+<select id="modeSelect" onchange="generateMenu()">
+    <option value="normal">โหมดปกติ</option>
+    <option value="noSpicy">ไม่เผ็ด</option>
+    <option value="highProtein">โปรตีนสูง</option>
+</select>
+
+<script src="script(ข้อมูลอาหาร).js"></script>
+
+<script>
+
+window.onload = function(){
+    generateMenu();
+}
+
+function getRangeByAge(age){
+    if(age <= 8) return {min:1200,max:1600};
+    if(age <= 18) return {min:1600,max:2200};
+    if(age <= 50) return {min:1800,max:2400};
+    return {min:1600,max:2000};
+}
+
+function generateMenu(){
+
+    let age = parseInt(localStorage.getItem("userAge"));
+    if(!age){
+        alert("ไม่พบอายุ");
+        return;
+    }
+
+    let range = getRangeByAge(age);
+    let mode = document.getElementById("modeSelect").value;
+
+    let ageType = "";
+    if(age <= 8) ageType = "เด็ก";
+    else if(age <= 18) ageType = "วัยรุ่น";
+    else if(age <= 50) ageType = "ผู้ใหญ่";
+    else ageType = "ผู้สูงอายุ";
+
+    let filtered = foodData.filter(f =>
+        f.ageGroup.includes("ทุกวัย") || f.ageGroup.includes(ageType)
+    );
+
+    if(mode === "noSpicy"){
+        filtered = filtered.filter(f => f.spicy === false);
+    }
+
+    if(mode === "highProtein"){
+        filtered = filtered.filter(f => f.protein >= 25);
+    }
+
+    if(ageType === "ผู้สูงอายุ"){
+        filtered = filtered.filter(f => f.chewEasy === true);
+    }
+
+    let selected = [];
+    let total = 0;
+
+    for(let i=0;i<1000;i++){
+
+        selected = [];
+        total = 0;
+
+        let shuffled = [...filtered].sort(()=>Math.random()-0.5);
+
+        for(let food of shuffled){
+            if(selected.length < 5){
+                selected.push(food);
+                total += food.calories;
+            }
+        }
+
+        if(total >= range.min && total <= range.max){
+            break;
+        }
+    }
+
+    document.getElementById("rangeText").innerText =
+        `ช่วงที่ควรได้รับ ${range.min}-${range.max} kcal`;
+
+    let html = "";
+    selected.forEach(f=>{
+        html += `
+            <div class="food">
+                <img src="${f.image}">
+                <p>${f.name}</p>
+                <p>🔥 ${f.calories} kcal</p>
+            </div>
+        `;
+    });
+
+    document.getElementById("resultBox").innerHTML = html;
+    document.getElementById("totalText").innerText =
+        `รวม ${total} kcal`;
+}
+
+</script>
+
+</body>
+</html>

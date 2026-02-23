@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANDOMFOOD</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Kanit',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255,0,0,0.4), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(255,0,0,0.3), transparent 40%),
+        linear-gradient(135deg,#000000,#3a0000,#8b0000);
+    color:white;
+}
+
+/* LOGIN */
+.login-box{
+    background:rgba(0,0,0,0.85);
+    padding:50px;
+    width:450px;
+    border-radius:25px;
+    text-align:center;
+    box-shadow:0 0 60px rgba(255,0,0,0.3);
+}
+
+.login-box h2{
+    font-size:32px;
+    margin-bottom:30px;
+}
+
+.login-box input{
+    width:100%;
+    padding:16px;
+    margin:12px 0;
+    border-radius:15px;
+    border:none;
+    font-size:17px;
+}
+
+.login-box button{
+    width:100%;
+    padding:16px;
+    margin-top:20px;
+    border:none;
+    border-radius:20px;
+    font-size:20px;
+    background:#ff2e2e;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.login-box button:hover{
+    background:#ff4444;
+    transform:scale(1.05);
+}
+
+/* MAIN */
+.container{
+    width:95%;
+    max-width:1200px;
+    text-align:center;
+}
+
+.logo{
+    font-size:42px;
+    font-weight:600;
+}
+
+header p{
+    font-size:22px;
+    margin-bottom:25px;
+}
+
+.user-section{
+    margin:20px 0;
+    font-size:20px;
+}
+
+.logout-btn{
+    padding:10px 25px;
+    border:none;
+    border-radius:25px;
+    background:#ff2e2e;
+    color:white;
+    cursor:pointer;
+}
+
+.input-wrapper{
+    margin:30px 0;
+}
+
+.input-wrapper input{
+    width:60%;
+    padding:18px;
+    border-radius:20px;
+    border:none;
+    font-size:20px;
+}
+
+.random-btn{
+    padding:20px 50px;
+    font-size:22px;
+    border:none;
+    border-radius:40px;
+    background:#ff2e2e;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.random-btn:hover{
+    background:#ff5555;
+    transform:scale(1.08);
+}
+
+/* RESULT */
+.result-card{
+    margin-top:50px;
+    background:rgba(0,0,0,0.9);
+    padding:40px;
+    border-radius:30px;
+    box-shadow:0 0 50px rgba(255,0,0,0.3);
+}
+
+.food-img-wrapper img{
+    width:100%;
+    max-height:400px;
+    object-fit:cover;
+    border-radius:25px;
+}
+
+.food-info h2{
+    font-size:34px;
+    margin:25px 0;
+}
+
+.tags{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+}
+
+.tag-cal,.tag-type{
+    padding:12px 25px;
+    border-radius:25px;
+    background:#ff2e2e;
+    font-size:20px;
+}
+
+.error-msg{
+    color:#ff5555;
+    margin-top:15px;
+    font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="background-overlay"></div>
+
+<!-- LOGIN PAGE -->
+<div class="login-box">
+    <h2 id="formTitle">เข้าสู่ระบบ</h2>
+
+    <input type="text" id="username" placeholder="ชื่อผู้ใช้">
+    <input type="password" id="password" placeholder="รหัสผ่าน">
+
+    <button id="mainBtn" onclick="handleAuth()">เข้าสู่ระบบ</button>
+
+    <p>
+        <span id="toggleText">ยังไม่มีบัญชี?</span>
+        <span id="toggleBtn" onclick="toggleForm()" style="color:red; cursor:pointer;">
+            สมัครสมาชิก
+        </span>
+    </p>
+
+    <p id="loginError" class="error-msg"></p>
+</div>
+
+<!-- MAIN PAGE -->
+<div class="container" id="mainPage" style="display:none;">
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-utensils"></i> RANDOMFOOD
+        </div>
+        <p>ระบบสุ่มอาหารอัจฉริยะ</p>
+    </header>
+
+    <div class="user-section">
+        <span id="welcomeUser"></span>
+        <button onclick="logout()" class="logout-btn">ออกจากระบบ</button>
+    </div>
+
+    <div class="input-section">
+        <div class="input-wrapper">
+            <i class="fa-solid fa-fire"></i>
+            <input type="number" id="calInput" placeholder="ระบุแคลอรี่สูงสุดที่ต้องการ (เช่น 500)">
+        </div>
+    </div>
+
+    <button class="random-btn" onclick="startRandom()">
+        สุ่มเมนูอาหาร
+    </button>
+
+    <div class="result-card" id="resultCard">
+        <div class="food-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80" id="foodImg">
+            <div class="loader" id="loader"></div>
+        </div>
+        
+        <div class="food-info">
+            <h2 id="foodName">พร้อมสุ่มหรือยัง?</h2>
+            <div class="tags">
+                <span class="tag-cal" id="foodCal">--- Kcal</span>
+                <span class="tag-type" id="foodType">---</span>
+            </div>
+        </div>
+    </div>
+
+    <p id="errorMsg" class="error-msg"></p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

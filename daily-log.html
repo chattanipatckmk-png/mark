@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ปฏิทินสรุปการกินรายเดือน</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Kanit, sans-serif;
+    background:linear-gradient(135deg,#000,#4b0000,#a00000);
+    color:white;
+    padding:30px;
+}
+
+/* ปุ่มกลับ */
+.back-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:linear-gradient(45deg,#ff2e2e,#ff6a00);
+    border:none;
+    color:white;
+    padding:8px 15px;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+/* หัวข้อ */
+h2{
+    text-align:center;
+}
+
+/* เลือกเดือน */
+.month-select{
+    text-align:center;
+    margin:20px 0;
+}
+
+select{
+    padding:8px 12px;
+    border-radius:8px;
+    border:none;
+}
+
+/* ปฏิทิน */
+.calendar{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:12px;
+}
+
+.day-header{
+    text-align:center;
+    font-weight:bold;
+}
+
+.day{
+    background:rgba(0,0,0,0.6);
+    border-radius:18px;
+    padding:12px;
+    min-height:95px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.day:hover{
+    transform:translateY(-4px);
+}
+
+.day.has-data{
+    border:2px solid #ff4444;
+}
+
+.day-number{
+    font-weight:bold;
+}
+
+.day-cal{
+    color:#ff4444;
+    font-size:12px;
+}
+
+.day-meal{
+    font-size:11px;
+    opacity:0.7;
+}
+
+/* สรุปเดือน */
+.month-summary{
+    margin-top:25px;
+    background:#111;
+    padding:18px;
+    border-radius:20px;
+    text-align:center;
+}
+
+/* สรุปปี */
+.year-summary{
+    margin-top:25px;
+    background:#000;
+    padding:20px;
+    border-radius:20px;
+}
+
+.year-summary h3{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.year-box{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+}
+
+.year-card{
+    background:#111;
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+}
+
+/* Modal */
+.modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.85);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    background:#111;
+    padding:25px;
+    width:90%;
+    max-width:500px;
+    border-radius:20px;
+}
+
+.close{
+    float:right;
+    cursor:pointer;
+    color:#ff4444;
+}
+</style>
+</head>
+
+<body>
+
+<button class="back-btn" onclick="window.location.href='main.html'">
+🔙 กลับหน้าแรก
+</button>
+
+<h2>📅 ปฏิทินสรุปการกินรายเดือน</h2>
+
+<div class="month-select">
+เลือกเดือน:
+<select id="monthSelect"></select>
+</div>
+
+<div class="calendar" id="calendar"></div>
+
+<div class="month-summary" id="monthSummary"></div>
+
+<div class="year-summary">
+<h3>📊 สรุปทั้งปี</h3>
+<div class="year-box">
+<div class="year-card" id="yearCal"></div>
+<div class="year-card" id="yearMeals"></div>
+</div>
+<div id="yearMonthlyBreakdown" style="margin-top:15px;"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+<div class="modal-content">
+<span class="close" onclick="closeModal()">✖</span>
+<h3 id="modalDate"></h3>
+<div id="modalContent"></div>
+</div>
+</div>
+
+<script>
+const logs = JSON.parse(localStorage.getItem("foodLogs")) || [];
+const calendar = document.getElementById("calendar");
+const monthSelect = document.getElementById("monthSelect");
+const monthSummary = document.getElementById("monthSummary");
+
+const yearCalEl = document.getElementById("yearCal");
+const yearMealsEl = document.getElementById("yearMeals");
+const yearMonthlyBreakdown = document.getElementById("yearMonthlyBreakdown");
+
+const daysName = ["อา","จ","อ","พ","พฤ","ศ","ส"];
+
+daysName.forEach(d=>{
+calendar.innerHTML += `<div class="day-header">${d}</div>`;
+});
+
+for(let i=1;i<=12;i++){
+monthSelect.innerHTML += `<option value="${i}">เดือน ${i}</option>`;
+}
+
+monthSelect.value = new Date().getMonth()+1;
+monthSelect.addEventListener("change", renderCalendar);
+
+function renderCalendar(){
+
+calendar.innerHTML="";
+daysName.forEach(d=>{
+calendar.innerHTML += `<div class="day-header">${d}</div>`;
+});
+
+const month = parseInt(monthSelect.value);
+const year = new Date().getFullYear();
+
+const firstDay = new Date(year, month-1, 1).getDay();
+const daysInMonth = new Date(year, month, 0).getDate();
+
+for(let i=0;i<firstDay;i++){
+calendar.innerHTML += `<div></div>`;
+}
+
+let monthTotal = 0;
+let monthMeals = 0;
+
+for(let d=1; d<=daysInMonth; d++){
+
+const dateStr = `${d}/${month}/${year+543}`;
+const dayLogs = logs.filter(l => l.date === dateStr);
+
+let total = 0;
+dayLogs.forEach(l=> total += l.cal);
+
+monthTotal += total;
+monthMeals += dayLogs.length;
+
+calendar.innerHTML += `
+<div class="day ${total>0?'has-data':''}" onclick="showDetail('${dateStr}')">
+<div class="day-number">${d}</div>
+${total>0 ? `<div class="day-cal">🔥 ${total} kcal</div>
+<div class="day-meal">${dayLogs.length} มื้อ</div>` : ""}
+</div>
+`;
+}
+
+monthSummary.innerHTML =
+`🔥 รวมแคลเดือนนี้: <b>${monthTotal} kcal</b><br>
+🍽 รวมมื้อเดือนนี้: <b>${monthMeals} มื้อ</b>`;
+
+renderYearSummary();
+}
+
+function renderYearSummary(){
+
+let yearTotalCal = 0;
+let yearTotalMeals = logs.length;
+
+let monthlyData = {};
+
+logs.forEach(l=>{
+const parts = l.date.split("/");
+const m = parts[1];
+if(!monthlyData[m]) monthlyData[m] = {cal:0, meals:0};
+monthlyData[m].cal += l.cal;
+monthlyData[m].meals += 1;
+yearTotalCal += l.cal;
+});
+
+yearCalEl.innerHTML = `🔥 รวมแคลทั้งปี<br><b>${yearTotalCal} kcal</b>`;
+yearMealsEl.innerHTML = `🍽 รวมมื้อทั้งปี<br><b>${yearTotalMeals} มื้อ</b>`;
+
+let html = "<h4>📆 สรุปรายเดือน</h4>";
+for(let m=1;m<=12;m++){
+if(monthlyData[m]){
+html += `เดือน ${m}: ${monthlyData[m].meals} มื้อ | ${monthlyData[m].cal} kcal<br>`;
+}else{
+html += `เดือน ${m}: 0 มื้อ | 0 kcal<br>`;
+}
+}
+yearMonthlyBreakdown.innerHTML = html;
+}
+
+function showDetail(date){
+
+const dayLogs = logs.filter(l => l.date === date);
+let html="";
+
+if(dayLogs.length===0){
+html="ไม่มีข้อมูลวันนี้";
+}else{
+dayLogs.forEach(l=>{
+html+=`
+🍽 ${l.meal} - ${l.name} (${l.cal} kcal)
+<br>⏰ ${l.time}
+<hr>
+`;
+});
+}
+
+document.getElementById("modalDate").innerText="📅 วันที่ "+date;
+document.getElementById("modalContent").innerHTML=html;
+document.getElementById("modal").style.display="flex";
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+}
+
+renderCalendar();
+</script>
+
+</body>
+</html>

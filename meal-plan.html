@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>วันนี้กินอะไรดี</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#8b0000,#b30000,#660000);
+    color:white;
+}
+
+.container{
+    width:100%;
+    min-height:100vh;
+    padding:50px 20px;
+    text-align:center;
+}
+
+h2{
+    font-size:36px;
+    margin-bottom:40px;
+}
+
+h3{
+    margin-top:40px;
+    color:#ffd700;
+}
+
+.food-list{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap;
+    margin-bottom:40px;
+}
+
+.food{
+    width:220px;
+    background:rgba(0,0,0,0.7);
+    padding:15px;
+    border-radius:15px;
+    transition:0.3s;
+    box-shadow:0 0 15px rgba(0,0,0,0.4);
+}
+
+.food:hover{
+    transform:translateY(-5px);
+    background:rgba(0,0,0,0.85);
+}
+
+.food img{
+    width:100%;
+    height:150px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+button{
+    padding:12px 30px;
+    border:none;
+    border-radius:25px;
+    background:#ff2e2e;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    margin:10px;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#ff5555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🍽 วันนี้กินอะไรดี</h2>
+
+<div id="resultBox"></div>
+
+<button onclick="generateMealPlan()">สุ่มใหม่ทั้งวัน</button>
+<button onclick="window.history.back()">กลับ</button>
+
+</div>
+
+<script src="script.nutrition.js"></script>
+
+<script>
+
+window.onload = function(){
+    generateMealPlan();
+}
+
+function generateMealPlan(){
+
+    function pickMeal(mealType){
+
+        let filtered = foodData.filter(f => f.meal.includes(mealType));
+        let shuffled = filtered.sort(()=>Math.random()-0.5);
+        let selected = shuffled.slice(0,3);
+
+        let total = 0;
+        selected.forEach(f => total += f.cal);
+
+        return {meal:selected,total};
+    }
+
+    let breakfast = pickMeal("breakfast");
+    let lunch = pickMeal("lunch");
+    let dinner = pickMeal("dinner");
+
+    document.getElementById("resultBox").innerHTML = `
+        <h3>🍳 มื้อเช้า (${breakfast.total} kcal)</h3>
+        ${render(breakfast.meal)}
+
+        <h3>☀️ มื้อกลางวัน (${lunch.total} kcal)</h3>
+        ${render(lunch.meal)}
+
+        <h3>🌙 มื้อเย็น (${dinner.total} kcal)</h3>
+        ${render(dinner.meal)}
+
+        <h2 style="color:#00ff88">
+        รวมทั้งวัน ${breakfast.total + lunch.total + dinner.total} kcal
+        </h2>
+    `;
+}
+
+function render(list){
+    let html = "<div class='food-list'>";
+    list.forEach(f=>{
+        html+=`
+        <div class="food">
+            <img src="${f.img}">
+            <p>${f.name}</p>
+            <p>🔥 ${f.cal} kcal</p>
+        </div>
+        `;
+    });
+    html+="</div>";
+    return html;
+}
+
+</script>
+
+</body>
+</html>
