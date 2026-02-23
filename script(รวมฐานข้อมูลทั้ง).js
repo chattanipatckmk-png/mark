@@ -1,15 +1,15 @@
 // 🔥 ฐานข้อมูลอาหาร (รูป + แคลอรี่)
 const foods = [
-    { name: "ข้าวผัด", calories: 650, img: "photo/ข้าวผัด.jpg" },
-    { name: "กะเพราไก่", calories: 550, img: "photo/กะเพราไก่.jpg" },
-    { name: "ส้มตำไทย", calories: 250, img: "photo/ส้มตำไทย.jpg" },
-    { name: "ต้มยำกุ้ง", calories: 300, img: "photo/ต้มยำกุ้ง.jpg" },
-    { name: "ผัดไทยกุ้ง", calories: 500, img: "photo/ผัดไทยกุ้ง.jpg" },
-    { name: "สเต๊กไก่", calories: 800, img: "photo/สเต๊กไก่.jpg" },
-    { name: "สลัดผัก", calories: 200, img: "photo/สลัดผัก.jpg" },
-    { name: "ข้าวมันไก่", calories: 600, img: "photo/ข้าวมันไก่.jpg" },
-    { name: "ข้าวไข่เจียว", calories: 450, img: "photo/ข้าวไข่เจียว.jpg" },
-    { name: "บะหมี่เกี๊ยวหมูแดง", calories: 700, img: "photo/บะหมี่เกี๊ยวหมูแดง.jpg" }
+    { name: "ข้าวผัด", calories: 650, img: "ข้าวผัด.jpg" },
+    { name: "กะเพราไก่", calories: 550, img: "กะเพราไก่.jpg" },
+    { name: "ส้มตำไทย", calories: 250, img: "ส้มตำไทย.jpg" },
+    { name: "ต้มยำกุ้ง", calories: 300, img: "ต้มยำกุ้ง.jpg" },
+    { name: "ผัดไทยกุ้ง", calories: 500, img: "ผัดไทยกุ้ง.jpg" },
+    { name: "สเต๊กไก่", calories: 800, img: "สเต๊กไก่.jpg" },
+    { name: "สลัดผัก", calories: 200, img: "สลัดผัก.jpg" },
+    { name: "ข้าวมันไก่", calories: 600, img: "ข้าวมันไก่.jpg" },
+    { name: "ข้าวไข่เจียว", calories: 450, img: "ข้าวไข่เจียว.jpg" },
+    { name: "บะหมี่เกี๊ยวหมูแดง", calories: 700, img: "บะหมี่เกี๊ยวหมูแดง.jpg" }
 ];
 
 // ช่วงแคลอรี่ตามอายุ
