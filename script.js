@@ -1,3 +1,4 @@
+
 // ข้อมูลอาหาร (ผมใส่ให้เยอะๆ ครบทุกประเภทเลยครับ)
 const foodData = [
     // --- โซนอาหารเหนือ / ไทใหญ่ (ตามที่เคยขอไว้) ---
@@ -106,8 +107,6 @@ const foodData = [
 ];
 
 let isAnimating = false;
-
-
 
 function formatType(type) {
     switch(type) {
@@ -246,6 +245,18 @@ stats.totalRandom += 1;
 stats.totalCalories += randomItem.cal;
 
 localStorage.setItem("stats", JSON.stringify(stats));
+// ===== บันทึกประวัติการสุ่ม =====
+let history = JSON.parse(localStorage.getItem(getUserKey("history"))) || [];
+
+history.push({
+    name: randomFood.name,
+    cal: randomFood.cal,
+    type: randomFood.type,
+    img: randomFood.img,
+    date: new Date().toLocaleString()
+});
+
+localStorage.setItem(getUserKey("history"), JSON.stringify(history));
 }
 saveToHistory({
     name: randomFood.name,
